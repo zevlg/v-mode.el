@@ -1,0 +1,8 @@
+* v-mode.el
+  :PROPERTIES:
+  :CUSTOM_ID: v-modeel
+  :END:
+
+Major mode for the [[https://vlang.io][V programming language]]
+
+Nothing yet done
