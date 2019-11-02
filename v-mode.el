@@ -34,10 +34,10 @@
 ;;; Code:
 
 (defconst v-mode-keywords
-  '("break" "const"  "continue" "defer" "else"   "enum"   "fn"
-    "for"   "go"     "goto"     "if"    "import" "in"     "interface"
-    "match" "module" "mut"      "or"    "pub"    "return" "struct"
-    "type")
+  '("break"  "const"  "continue" "defer" "else"   "enum"   "fn"
+    "for"    "go"     "goto"     "if"    "import" "in"     "interface"
+    "match"  "module" "mut"      "none"  "or"     "pub"    "return"
+    "struct" "type")
   "V language keywords. See https://vlang.io/docs#keywords")
 
 (provide 'v-mode)
