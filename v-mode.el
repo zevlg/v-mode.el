@@ -33,12 +33,42 @@
 
 ;;; Code:
 
-(defconst v-mode-keywords
-  '("break"  "const"  "continue" "defer" "else"   "enum"   "fn"
-    "for"    "go"     "goto"     "if"    "import" "in"     "interface"
-    "match"  "module" "mut"      "none"  "or"     "pub"    "return"
-    "struct" "type")
-  "V language keywords. See https://vlang.io/docs#keywords")
+(defun v--regexp-opt (strings &optional paren)
+  "Emacs 23 provides `regexp-opt', but it does not support PAREN taking the value 'symbols.
+This function provides equivalent functionality, but makes no efforts to optimise the regexp."
+  (cond
+   ((>= emacs-major-version 24)
+    (regexp-opt strings paren))
+   ((not (eq paren 'symbols))
+    (regexp-opt strings paren))
+   ((null strings)
+    "")
+   ('t
+    (rx-to-string `(seq symbol-start (or ,@strings) symbol-end)))))
+
+(defconst v-keywords-regex
+  (v--regexp-opt
+   '("break"  "const"  "continue" "defer" "else"   "enum"   "fn"
+     "for"    "go"     "goto"     "if"    "import" "in"     "interface"
+     "match"  "module" "mut"      "none"  "or"     "pub"    "return"
+     "struct" "type")
+   'symbols))
+
+;;(defconst v-function-regex
+;;  (rx line-start (* (or space "pub")) symbol-start
+;;      "fn" (1+ space)
+;;      (group (or word (syntax symbol)))))
+
+(defconst v-builtin-types-regex
+  (v--regexp-opt
+   '("bool" "string"
+     "i8"   "i16" "int" "i64" "i128"
+     "byte" "u16" "u32" "u64" "u128"
+     "rune"
+     "f32" "f64"
+     "byteptr"
+     "voidptr")
+   'symbols))
 
 (defconst v-mode-syntax-table
   (let ((table (make-syntax-table)))
@@ -65,9 +95,33 @@
 
     table))
 
-(define-derived-mode v-mode prog-mode "vlang"
-  :syntax-table v-mode-syntax-table
-  (font-lock-fontify-buffer))
+(defconst v-builtin-regex
+  (v--regexp-opt
+   '()
+   'symbols))
+
+(defconst v-font-lock-keywords
+  (list
+;;   (list v-quoted-symbol-regex 1 ''julia-quoted-symbol-face)
+   (cons v-builtin-types-regex 'font-lock-type-face)
+   (cons v-keywords-regex 'font-lock-keyword-face)
+;;   (list v-unquote-regex 2 'font-lock-constant-face)
+;;   (list v-forloop-in-regex 1 'font-lock-keyword-face)
+;;   (list v-function-regex 1 'font-lock-function-name-face)
+;;   (list v-function-assignment-regex 1 'font-lock-function-name-face)
+   (list v-builtin-regex 1 'font-lock-builtin-face)
+   ))
+
+(defalias 'v-mode-prog-mode
+  (if (fboundp 'prog-mode)
+      'prog-mode
+    'fundamental-mode))
+
+(define-derived-mode v-mode v-mode-prog-mode "Vlang"
+  (set-syntax-table v-mode-syntax-table)
+  (set (make-local-variable 'font-lock-defaults) '(julia-font-lock-keywords))
+  ;;  (font-lock-fontify-buffer))
+  )
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.v\\'" . v-mode))
