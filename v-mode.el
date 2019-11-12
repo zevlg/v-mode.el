@@ -40,6 +40,38 @@
     "struct" "type")
   "V language keywords. See https://vlang.io/docs#keywords")
 
+(defconst v-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?' "\"" table)
+    (modify-syntax-entry ?\" "\"" table)
+
+    (modify-syntax-entry ?+ "." table)
+    (modify-syntax-entry ?- "." table)
+    (modify-syntax-entry ?* "." table)
+    (modify-syntax-entry ?/ "." table)
+    (modify-syntax-entry ?% "." table)
+    (modify-syntax-entry ?= "." table)
+    (modify-syntax-entry ?< "." table)
+    (modify-syntax-entry ?> "." table)
+
+    (modify-syntax-entry ?\( "()" table)
+    (modify-syntax-entry ?\) ")(" table)
+    (modify-syntax-entry ?\{ "(}" table)
+    (modify-syntax-entry ?\} "){" table)
+    (modify-syntax-entry ?\[ "(]" table)
+    (modify-syntax-entry ?\] ")[" table)
+
+    ;(modify-syntax-entry ?\n ">" table)
+
+    table))
+
+(define-derived-mode v-mode prog-mode "vlang"
+  :syntax-table v-mode-syntax-table
+  (font-lock-fontify-buffer))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.v\\'" . v-mode))
+
 (provide 'v-mode)
 
 ;;; v-mode.el ends here
