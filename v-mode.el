@@ -78,7 +78,7 @@ This function provides equivalent functionality, but makes no efforts to optimis
     (modify-syntax-entry ?+ "." table)
     (modify-syntax-entry ?- "." table)
     (modify-syntax-entry ?* "." table)
-    (modify-syntax-entry ?/ "." table)
+    (modify-syntax-entry ?/ ". 12" table)
     (modify-syntax-entry ?% "." table)
     (modify-syntax-entry ?= "." table)
     (modify-syntax-entry ?< "." table)
@@ -91,12 +91,15 @@ This function provides equivalent functionality, but makes no efforts to optimis
     (modify-syntax-entry ?\[ "(]" table)
     (modify-syntax-entry ?\] ")[" table)
 
-    ;(modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?\n ">" table)
 
     table))
 
 (defconst v-builtin-regex
   (v--regexp-opt
+   ;;'("print"           "println" "exit"     "isnill" "print_backtrace_skipping_top_frames"
+   ;;  "print_backtrace" "panic"   "eprintln" "malloc" "calloc"
+   ;;  "free"            "memdup"  "is_atty")
    '()
    'symbols))
 
@@ -121,6 +124,8 @@ This function provides equivalent functionality, but makes no efforts to optimis
   (set-syntax-table v-mode-syntax-table)
   (set (make-local-variable 'font-lock-defaults) '(julia-font-lock-keywords))
   ;;  (font-lock-fontify-buffer))
+  (setq comment-start "//")
+  (setq comment-end "")
   )
 
 ;;;###autoload
