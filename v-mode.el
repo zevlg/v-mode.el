@@ -72,13 +72,14 @@ This function provides equivalent functionality, but makes no efforts to optimis
 
 (defconst v-mode-syntax-table
   (let ((table (make-syntax-table)))
-    (modify-syntax-entry ?' "\"" table)
+    (modify-syntax-entry ?\' "\"" table)
     (modify-syntax-entry ?\" "\"" table)
-
+    (modify-syntax-entry ?\\ "\\" table)
+    
     (modify-syntax-entry ?+ "." table)
     (modify-syntax-entry ?- "." table)
-    (modify-syntax-entry ?* "." table)
-    (modify-syntax-entry ?/ ". 12" table)
+    (modify-syntax-entry ?* ". 23" table)
+    (modify-syntax-entry ?/ ". 124b" table)
     (modify-syntax-entry ?% "." table)
     (modify-syntax-entry ?= "." table)
     (modify-syntax-entry ?< "." table)
@@ -91,9 +92,12 @@ This function provides equivalent functionality, but makes no efforts to optimis
     (modify-syntax-entry ?\[ "(]" table)
     (modify-syntax-entry ?\] ")[" table)
 
-    (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?\n "> b" table)
 
-    table))
+    (modify-syntax-entry ?_ "w" table)
+    
+    table)
+  "Syntax table for V mode.")
 
 (defconst v-builtin-regex
   (v--regexp-opt
